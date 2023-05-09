@@ -91,7 +91,7 @@ where
 /// information.
 #[cfg(tokio_unstable)]
 #[track_caller]
-pub fn spawn<Fut, Name, NameClosure>(nc: NameClosure, future: Fut) -> JoinHandle<Fut::Output>
+pub fn spawn<Fut, Name, NameClosure>(_nc: NameClosure, future: Fut) -> JoinHandle<Fut::Output>
 where
     Name: AsRef<str>,
     NameClosure: FnOnce() -> Name,
@@ -99,10 +99,7 @@ where
     Fut::Output: Send + 'static,
 {
     #[allow(clippy::disallowed_methods)]
-    task::Builder::new()
-        .name(nc().as_ref())
-        .spawn(future)
-        .expect("task spawning cannot fail")
+    task::spawn(future)
 }
 
 /// Runs the provided closure with a name on a thread where blocking is
@@ -135,7 +132,7 @@ where
 #[track_caller]
 #[allow(clippy::disallowed_methods)]
 pub fn spawn_blocking<Function, Output, Name, NameClosure>(
-    nc: NameClosure,
+    _nc: NameClosure,
     function: Function,
 ) -> JoinHandle<Output>
 where
@@ -144,10 +141,7 @@ where
     Function: FnOnce() -> Output + Send + 'static,
     Output: Send + 'static,
 {
-    task::Builder::new()
-        .name(nc().as_ref())
-        .spawn_blocking(function)
-        .expect("task spawning cannot fail")
+    task::spawn_blocking(function)
 }
 
 /// Extension methods for [`Runtime`] and [`Handle`].

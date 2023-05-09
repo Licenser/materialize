@@ -2108,7 +2108,7 @@ fn build_timezone_offset_second(tokens: &[TimeStrToken], value: &str) -> Result<
                 }
                 (Zulu, Zulu) => return Ok(Default::default()),
                 (TzName(val), TzName(_)) => {
-                    return match Tz::from_str_insensitive(val) {
+                    return match Tz::from_str(val) {
                         Ok(tz) => Ok(Timezone::Tz(tz)),
                         Err(err) => Err(format!(
                             "Invalid timezone string ({}): {}. \
